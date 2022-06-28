@@ -2,6 +2,8 @@
 #include <boost/cstdint.hpp>  // for boost::uint16_t
 #include <cassert>    // for assert
 #include <cstddef>    // for std::size_t
+#include <iostream>
+
 
 int main()
 {
@@ -14,17 +16,18 @@ int main()
     };
 
     // CRC-64WE для "123456789", используется для проверки работы перевода
-    boost::uint64_t const  expected = 0x995dc9bbdf1939fa;
+    boost::uint64_t const  expected = 0x1f23b8;
 
     // Проверка двумя способами: через crc_basic и crc_optimal
     std::size_t const check_data_len = sizeof(check_data) / sizeof(check_data[0]);
-    boost::crc_basic<64> crc_check_basic(0x42f0e1eba9ea3693, 0xffffffffffffffff, 0xffffffffffffffff, true, true);
+    boost::crc_basic<24> crc_check_basic(0x5d6dcb, 0xabcdef, 0x000000, false, false);
     crc_check_basic.process_bytes(check_data, check_data_len);
     assert(crc_check_basic.checksum() == expected);
 
-    boost::crc_optimal<64, 0x42f0e1eba9ea3693, 0xffffffffffffffff, 0xffffffffffffffff, true, true> crc_check_optimal;
+    boost::crc_optimal<24, 0x5d6dcb, 0xabcdef, 0x000000, false, false> crc_check_optimal;
     crc_check_optimal.process_bytes(check_data, check_data_len);
     assert(crc_check_optimal.checksum() == expected);
+    std::cout << "Initial checks complete." << std::endl;
 
     unsigned char const  data[] = 
     { 
@@ -43,14 +46,14 @@ int main()
     // Количество символов в строке
     std::size_t const data_len = sizeof(data) / sizeof(data[0]);
 
-    // Создаем CRC-64XZ
-    boost::crc_basic<64> crc_ccitt64XZ(0x42f0e1eba9ea3693, 0xffffffffffffffff, 0xffffffffffffffff, true, true);
+    // Создаем CRC-24/FLEXRAY-B
+    boost::crc_basic<24> crc_ccitt64XZ(0x5d6dcb, 0xabcdef, 0x000000, false, false);
     crc_ccitt64XZ.process_bytes(data, data_len);
     crc_ccitt64XZ.checksum();
 
 
-    boost::crc_optimal<64, 0x42f0e1eba9ea3693, 0xffffffffffffffff, 0xffffffffffffffff, true, true> crc;
+    boost::crc_optimal<24, 0x5d6dcb, 0xabcdef, 0x000000, false, false> crc;
     crc.process_bytes(data, data_len);
-    crc.checksum();
+    std::cout << "Your CRC is   " << crc.checksum() << std::endl;
     return 0;
 }
