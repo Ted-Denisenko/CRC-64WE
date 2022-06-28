@@ -14,15 +14,15 @@ int main()
     };
 
     // CRC-64WE для "123456789", используется для проверки работы перевода
-    boost::uint64_t const  expected = 0x62ec59e3f1a4f00a;
+    boost::uint64_t const  expected = 0x995dc9bbdf1939fa;
 
     // Проверка двумя способами: через crc_basic и crc_optimal
     std::size_t const check_data_len = sizeof(check_data) / sizeof(check_data[0]);
-    boost::crc_basic<64> crc_check_basic(0x42f0e1eba9ea3693, 0xffffffffffffffff, 0xffffffffffffffff, false, false);
+    boost::crc_basic<64> crc_check_basic(0x42f0e1eba9ea3693, 0xffffffffffffffff, 0xffffffffffffffff, true, true);
     crc_check_basic.process_bytes(check_data, check_data_len);
     assert(crc_check_basic.checksum() == expected);
 
-    boost::crc_optimal<64, 0x42f0e1eba9ea3693, 0xffffffffffffffff, 0xffffffffffffffff, false, false> crc_check_optimal;
+    boost::crc_optimal<64, 0x42f0e1eba9ea3693, 0xffffffffffffffff, 0xffffffffffffffff, true, true> crc_check_optimal;
     crc_check_optimal.process_bytes(check_data, check_data_len);
     assert(crc_check_optimal.checksum() == expected);
 
@@ -43,13 +43,13 @@ int main()
     // Количество символов в строке
     std::size_t const data_len = sizeof(data) / sizeof(data[0]);
 
-    // Создаем CRC-64WE
-    boost::crc_basic<64> crc_ccitt64WE(0x42f0e1eba9ea3693, 0xffffffffffffffff, 0xffffffffffffffff, false, false);
-    crc_ccitt64WE.process_bytes(data, data_len);
-    crc_ccitt64WE.checksum();
+    // Создаем CRC-64XZ
+    boost::crc_basic<64> crc_ccitt64XZ(0x42f0e1eba9ea3693, 0xffffffffffffffff, 0xffffffffffffffff, true, true);
+    crc_ccitt64XZ.process_bytes(data, data_len);
+    crc_ccitt64XZ.checksum();
 
 
-    boost::crc_optimal<64, 0x42f0e1eba9ea3693, 0xffffffffffffffff, 0xffffffffffffffff, false, false> crc;
+    boost::crc_optimal<64, 0x42f0e1eba9ea3693, 0xffffffffffffffff, 0xffffffffffffffff, true, true> crc;
     crc.process_bytes(data, data_len);
     crc.checksum();
     return 0;
