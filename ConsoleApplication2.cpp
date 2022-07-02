@@ -51,9 +51,9 @@ int main()
     crc_ccitt64XZ.process_bytes(data, data_len);
     crc_ccitt64XZ.checksum();
 
-
     boost::crc_optimal<24, 0x5d6dcb, 0xabcdef, 0x000000, false, false> crc;
     crc.process_bytes(data, data_len);
-    std::cout << "Your CRC is   " << crc.checksum() << std::endl;
+    std::cout << "Your CRC is   " << std::hex << crc.checksum() << std::endl;
+    std::cout << "Task completed!" << std::endl;
     return 0;
 }
